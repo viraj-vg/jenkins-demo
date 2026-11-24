@@ -21,17 +21,19 @@ pipeline {
             post { success { archiveArtifacts 'target/myapp.jar' } }
         }
 
+
+
         stage('Deploy to Staging') {
             steps {
-                sh '''
-                  mkdir -p /var/jenkins_home/staging
-                  cp target/myapp.jar /var/jenkins_home/staging/myapp.jar
-                  java -jar /var/jenkins_home/staging/myapp.jar
-                '''
+                sshagent(credentials: ['ec2-ssh-key']) {
+                    sh '''
+                      scp -o StrictHostKeyChecking=no target/myapp.jar ubuntu@13.127.142.181:/home/ubuntu/myapp.jar
+                      ssh -o StrictHostKeyChecking=no ubuntu@13.127.142.181 "java -jar /home/ubuntu/myapp.jar"
+                    '''
+                }
             }
         }
-    }
-
+        
     post {
         success { echo 'Build, tests and deployment succeeded' }
         failure { echo 'Pipeline failed: deployment skipped' }
