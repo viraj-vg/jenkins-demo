@@ -140,6 +140,3 @@ Hello from Jenkins CI/CD! 2+3=5
 
 Automating testing and deployment gives faster, repeatable releases with minimal manual intervention: every push is built, tested and, if green, deployed.
 
-## Author
-
-viraj-vg
